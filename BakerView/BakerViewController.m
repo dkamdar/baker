@@ -515,6 +515,38 @@
     downTapArea  = CGRectMake(tappableAreaSize, pageHeight - tappableAreaSize, pageWidth - (tappableAreaSize * 2), tappableAreaSize);
     leftTapArea  = CGRectMake(0, tappableAreaSize, tappableAreaSize, pageHeight - (tappableAreaSize * 2));
     rightTapArea = CGRectMake(pageWidth - tappableAreaSize, tappableAreaSize, tappableAreaSize, pageHeight - (tappableAreaSize * 2));
+    #ifdef DEBUG
+        [self showTappableAreaForRect:upTapArea andDisplayLabel:@"UP Tap Area"];
+        [self showTappableAreaForRect:downTapArea andDisplayLabel:@"DOWN Tap Area"];
+        [self showTappableAreaForRect:leftTapArea andDisplayLabel:@"LEFT Tap Area"];
+        [self showTappableAreaForRect:rightTapArea andDisplayLabel:@"RIGHT Tap Area"];
+    #endif
+}
+-(void)showTappableAreaForRect:(CGRect)rect andDisplayLabel:(NSString *)text{
+    // Method 1 - By Adding UIViews but it lays over the tapArea CGRects so Taps are not detected!
+    /*
+    UIView *borderView = [[UIView alloc] initWithFrame:rect];
+    borderView.backgroundColor = [UIColor clearColor];
+    //borderView.alpha = 0.0f;
+    borderView.layer.borderWidth = 1.0;
+    borderView.layer.borderColor = [UIColor grayColor].CGColor;
+    
+    UILabel *displayLabel = [[UILabel alloc] initWithFrame:rect];
+    [displayLabel setTextAlignment:NSTextAlignmentCenter];
+    displayLabel.text = text;
+    [self.view addSubview:displayLabel];
+    [self.view addSubview:borderView];
+    
+    [borderView release];
+    [displayLabel release];
+     */
+    // Method 2 - Draw Rects for Tappble Areas - It seems the rects are getting drawn behind the Webview or I am not able to get the context to draw on top of the webview.
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 0.5);   //this is the transparent color
+    CGContextSetRGBStrokeColor(context, 0.0, 0.0, 0.0, 0.5);
+    CGContextFillRect(context, rect);
+    CGContextStrokeRect(context, rect);
+    currPage.alpha = 0.5;
 }
 - (void)showPageDetails {
     //NSLog(@"[BakerView] Show page details for the book pages");
